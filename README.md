@@ -1,53 +1,60 @@
-# GEDFN
+# ResidualAttentionNetwork-pytorch
+A pytorch code about Residual Attention Network.  
 
-GEDFN: graph-embedded deep feedforward networks - Tensorflow implementation
+This code is based on two  projects from 
 
-The method is introduced in https://academic.oup.com/bioinformatics/advance-article-abstract/doi/10.1093/bioinformatics/bty429/5021680?redirectedFrom=fulltext.
+https://github.com/liudaizong/Residual-Attention-Network 
+and 
+https://github.com/fwang91/residual-attention-network/blob/master/imagenet_model/Attention-92-deploy.prototxt
 
-## Prerequisites
+The first project is the pytorch code, but i think some network detail is not good. So I modify it according to 
+the architechure of the Attention-92-deploy.prototxt.
 
-The following packages are required for executing the main code file:
+And I also add the ResidualAttentionModel_92 for training imagenet,
+ResidualAttentionModel_448input for larger image input,
+and ResidualAttentionModel_92_32input_update for training cifar10.
 
-* NumPy http://www.numpy.org/
-* Scikit-learn http://scikit-learn.org/stable/install.html
-* Tensorflow https://www.tensorflow.org/install/
 
-## Usage
 
-### Data formats
+# paper referenced
+Residual Attention Network for Image Classification (CVPR-2017 Spotlight)
+By Fei Wang, Mengqing Jiang, Chen Qian, Shuo Yang, Chen Li, Honggang Zhang, Xiaogang Wang, Xiaoou Tang
 
-* data matrix (example_expression.csv): a csv file with n rows and p+1 columns. n is the number of samples and p is the number of features (continuous variables, such as gene expression values). The additional column at last is the 0/1 binary outcome variable vector. n=100 and p=500 for the example dataset.
-* feature graph (example_adjacency.txt): a txt file with p rows and p colunms, which is the corresponding adjacency matrix of the feature graph.
 
-NOTE: no headers are allowed in both files.
+# how to train?
+first, download the data from http://www.cs.toronto.edu/~kriz/cifar.html
+make sure the varible 
+# 
+is_train = True
+#
+CUDA_VISIBLE_DEVICES=0 python train.py
 
-### Run GEDFN
+CUDA_VISIBLE_DEVICES=0 python train_mixup.py(with mixup) 
 
-In the terminal, change the directory to the folder under which main.py is located, then type the command
+you can train on ResidualAttentionModel_56 or ResidualAttentionModel_448input, only should modify the code in train.py
+from  "from model.residual_attention_network import ResidualAttentionModel_92 as ResidualAttentionModel" to
+"from model.residual_attention_network import ResidualAttentionModel_56 as ResidualAttentionModel"
 
-```
- python main.py "example_expression.csv" "example_adjacency.txt" "var_impo.csv"
-```
+# how to test?
+make sure the varible 
+#
+is_train = False
+#
+CUDA_VISIBLE_DEVICES=0 python train.py
 
-where var_impo.csv is the output file for variable importance and will be created by the program automatically. The program will run while printing logs
+CUDA_VISIBLE_DEVICES=0 python train_mixup.py(with mixup) 
 
-```
-Epoch: 1 cost = 0.619800305 Training accuracy: 0.5  Training auc: 0.658
-Epoch: 2 cost = 0.620009381 Training accuracy: 0.5  Training auc: 0.728
-Epoch: 3 cost = 0.610391283 Training accuracy: 0.5  Training auc: 0.782
-......
-Epoch: 71 cost = 0.142398462 Training accuracy: 0.988  Training auc: 0.999
-Epoch: 72 cost = 0.126102197 Training accuracy: 0.988  Training auc: 0.999
-Epoch: 73 cost = 0.116139328 Training accuracy: 0.988  Training auc: 1.0
-Epoch: 74 cost = 0.121380727 Training accuracy: 0.988  Training auc: 1.0
-Epoch: 75 cost = 0.127119239 Training accuracy: 1.0  Training auc: 1.0
-Epoch: 76 cost = 0.097086006 Training accuracy: 1.0  Training auc: 1.0
-Early stopping.
-*****===== Testing accuracy:  0.85  Testing auc:  0.94 =====*****
-```
+# result
+1. cifar-10: Acc-95.4(Top-1 err 4.6) with ResidualAttentionModel_92_32input_update(higher than paper top-1 err 4.99)
 
-and the var_impo.csv file is seen in this repo.
+2. cifar-10: Acc-96.65(Top-1 err 3.35) with ResidualAttentionModel_92_32input_update(with mixup).
 
-### Hyperparameters and training options
+3. cifar-10: Acc-96.84(Top-1 err 3.16) with ResidualAttentionModel_92_32input_update(with mixup, with simpler attention module).
 
-Seen in the main.py.
+Thanks to @PistonY, who give me the advice of mixup.
+More details for mixup you can reference the project https://github.com/facebookresearch/mixup-cifar10
+
+the paper only give the archietcture details of attention_92 for imagenet with 224 input but not for cifar10. So I build the net following my understanding. I have not struggled for optimizing the code, so maybe you can do better based my code.
+
+# model file： 
+model_92_sgd.pkl is the trained model file, accuracy of 0.954
