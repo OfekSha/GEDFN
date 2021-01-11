@@ -1,0 +1,10 @@
+[workspace]
+restore_data_on_startup = True
+save_data_on_exit = True
+save_history = True
+save_non_project_files = False
+
+[main]
+version = 0.2.0
+recent_files = ['model\\EmbedingLayer.py', 'model\\Residual.py', 'model\\dense.py', '..\\..\\..\\anaconda3\\lib\\site-packages\\tensorflow\\python\\keras\\utils\\version_utils.py', '..\\..\\..\\anaconda3\\lib\\site-packages\\tensorflow\\python\\keras\\layers\\pooling.py', '..\\..\\..\\anaconda3\\lib\\site-packages\\tensorflow\\python\\keras\\engine\\training.py', 'model\\test.py', '..\\..\\..\\anaconda3\\lib\\site-packages\\tensorflow\\python\\keras\\layers\\core.py', '..\\..\\..\\anaconda3\\lib\\site-packages\\tensorflow\\python\\keras\\engine\\base_layer.py']
+
